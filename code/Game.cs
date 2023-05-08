@@ -39,6 +39,14 @@ partial class SandboxGame : GameManager
 		player.Inventory.Add( new RPG() );
 	}
 
+[ConCmd.Admin( "givetest" )]
+	public static void GiveTest()
+	{
+		var player = ConsoleSystem.Caller.Pawn as SandboxPlayer;
+
+		player.Inventory.Add( new AK() );
+	}
+
 	[ConCmd.Server( "spawn" )]
 	public static async Task Spawn( string modelname )
 	{
