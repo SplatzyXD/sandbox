@@ -232,7 +232,7 @@ partial class SandboxPlayer : Player
 		animHelper.AimAngle = rotation;
 		animHelper.FootShuffle = shuffle;
 		animHelper.DuckLevel = MathX.Lerp( animHelper.DuckLevel, controller.HasTag( "ducked" ) ? 1 : 0, Time.Delta * 10.0f );
-		animHelper.VoiceLevel = ( Game.IsClient && Client.IsValid() ) ? Client.Voice.LastHeard < 0.5f ? Client.Voice.CurrentLevel : 0.0f : 0.0f;
+		animHelper.VoiceLevel = Client.Voice.LastHeard < 0.5f ? Client.Voice.CurrentLevel : 0.0f;
 		animHelper.IsGrounded = GroundEntity != null;
 		animHelper.IsSitting = controller.HasTag( "sitting" );
 		animHelper.IsNoclipping = controller.HasTag( "noclip" );
@@ -267,31 +267,6 @@ partial class SandboxPlayer : Player
 	public override float FootstepVolume()
 	{
 		return Velocity.WithZ( 0 ).Length.LerpInverse( 0.0f, 200.0f ) * 5.0f;
-	}
-
-	[ConCmd.Server( "inventory_current" )]
-	public static void SetInventoryCurrent( string entName )
-	{
-		var target = ConsoleSystem.Caller.Pawn as Player;
-		if ( target == null ) return;
-
-		var inventory = target.Inventory;
-		if ( inventory == null )
-			return;
-
-		for ( int i = 0; i < inventory.Count(); ++i )
-		{
-			var slot = inventory.GetSlot( i );
-			if ( !slot.IsValid() )
-				continue;
-
-			if ( slot.ClassName != entName )
-				continue;
-
-			inventory.SetActiveSlot( i, false );
-
-			break;
-		}
 	}
 
 	public override void FrameSimulate( IClient cl )
